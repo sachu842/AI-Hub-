@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#060b14">
+<title>AI Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div class="aurora" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+<div class="grain" aria-hidden="true"></div>
+
+<main class="layer">
+  <!-- Login and sign up -->
+  <section id="auth" aria-label="Log in to AI Hub" hidden>
+    <div class="pitch">
+      <a class="brand" href="/"><span class="mark"><i></i></span>AI Hub</a>
+      <h1>Every AI tool to <span class="grad"><span class="word" id="word">chat</span></span> with. One place.</h1>
+      <p class="lead">Chat, write, code, plan and translate with AI tools that really work. Create a free account to open your hub.</p>
+      <div class="chips" aria-hidden="true">
+        <span class="chip-float"><b>10</b> working tools</span>
+        <span class="chip-float"><b>6</b> categories</span>
+        <span class="chip-float">powered by <b>Claude</b></span>
+        <span class="chip-float"><b>free</b> to use</span>
+      </div>
+    </div>
+
+    <div class="card-wrap">
+      <div class="card" id="card" data-mode="login">
+        <div class="tabs" id="tabs" data-tab="login" role="tablist">
+          <span class="tab-pill"></span>
+          <button class="tab" role="tab" id="tab-login" aria-selected="true" type="button" data-t="login">Log in</button>
+          <button class="tab" role="tab" id="tab-signup" aria-selected="false" type="button" data-t="signup">Sign up</button>
+        </div>
+        <div>
+          <h2 id="title">Welcome back</h2>
+          <p class="sub" id="subtitle">Log in with your email or username.</p>
+        </div>
+        <form id="form" novalidate>
+          <div class="field only-signup" id="f-user">
+            <label for="username">Username</label>
+            <div class="input"><input id="username" name="username" type="text" autocomplete="username" placeholder="neon_fox" maxlength="24"></div>
+            <div class="err" id="e-user">Use 3 to 24 letters, numbers or underscores.</div>
+          </div>
+          <div class="field" id="f-email">
+            <label for="email" id="email-label">Email or username</label>
+            <div class="input"><input id="email" name="email" type="text" autocomplete="username" placeholder="you@example.com" maxlength="254"></div>
+            <div class="err" id="e-email">Enter your email or username.</div>
+          </div>
+          <div class="field" id="f-pass">
+            <label for="password">Password</label>
+            <div class="input has-eye">
+              <input id="password" name="password" type="password" autocomplete="current-password" placeholder="At least 8 characters" maxlength="128">
+              <button class="eye" id="eye" type="button" aria-label="Show password">Show</button>
+            </div>
+            <div class="only-signup">
+              <div class="meter" id="meter"><i></i><i></i><i></i><i></i></div>
+              <span class="meter-label" id="meter-label">Strength: add 8+ characters</span>
+            </div>
+            <div class="err" id="e-pass">Password must be at least 8 characters.</div>
+          </div>
+          <div class="form-error" id="form-error" role="alert" hidden></div>
+          <button class="btn" id="submit" type="submit"><span class="spin"></span><span id="submit-text">Log in</span></button>
+        </form>
+        <p class="note">Your password is stored as a secure hash, never as plain text.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Hub -->
+  <section id="hub" hidden aria-label="AI Hub">
+    <div class="top">
+      <a class="brand" href="/"><span class="mark"><i></i></span>AI Hub</a>
+      <div class="user">
+        <div class="avatar" id="avatar">A</div>
+        <div><b id="who">you</b><small id="left-pill">Signed in</small></div>
+        <button class="ghost" id="logout" type="button">Log out</button>
+      </div>
+    </div>
+
+    <div class="hero">
+      <h1>Hi <span class="grad" id="hello">there</span>, what will you build today?</h1>
+      <div class="search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+        <input id="q" type="search" placeholder="Search tools, like write or code" autocomplete="off" aria-label="Search tools">
+      </div>
+      <div class="filters" id="filters" role="group" aria-label="Categories"></div>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><b id="s-tools">0</b><span>Tools in the hub</span></div>
+      <div class="stat"><b id="s-cats">0</b><span>Categories</span></div>
+      <div class="stat"><b id="s-used">0</b><span>Requests used today</span></div>
+      <div class="stat"><b id="s-left">0</b><span>Requests left today</span></div>
+    </div>
+
+    <div class="sec-title"><h2>Explore tools</h2><span id="count">0 tools</span></div>
+    <div class="grid" id="grid"></div>
+
+    <div class="potd">
+      <div>
+        <span class="lab">Prompt of the day</span>
+        <blockquote id="prompt">Act as a patient tutor. Explain how a neural network learns, using a pizza kitchen as the metaphor, in under 150 words.</blockquote>
+      </div>
+      <div class="potd-actions">
+        <button class="ghost" id="potd-try" type="button">Try it now</button>
+        <button class="ghost" id="copy" type="button">Copy prompt</button>
+      </div>
+    </div>
+
+    <footer>
+      <span>AI Hub. Answers come from AI and can contain mistakes, so double-check important things.</span>
+      <span class="mono">v1.0</span>
+    </footer>
+  </section>
+</main>
+
+<!-- Tool workspace -->
+<div class="ws" id="ws" hidden role="dialog" aria-modal="true" aria-labelledby="ws-name">
+  <div class="ws-panel">
+    <header class="ws-head">
+      <div class="badge" id="ws-badge" aria-hidden="true">N</div>
+      <div class="ws-title">
+        <h2 id="ws-name">Tool</h2>
+        <p id="ws-desc"></p>
+      </div>
+      <button class="ghost" id="ws-new" type="button">New chat</button>
+      <button class="ghost" id="ws-close" type="button" aria-label="Close tool">Close</button>
+    </header>
+    <div class="ws-log" id="ws-log" aria-live="polite"></div>
+    <form class="ws-form" id="ws-form">
+      <textarea id="ws-input" rows="2" maxlength="8000" aria-label="Your message"></textarea>
+      <div class="ws-bar">
+        <span class="ws-hint" id="ws-hint">Enter to send, Shift+Enter for a new line</span>
+        <button class="btn small" id="ws-send" type="submit"><span class="spin"></span><span>Send</span></button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script src="/app.js"></script>
+</body>
+</html>
